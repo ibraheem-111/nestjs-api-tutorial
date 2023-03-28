@@ -26,13 +26,14 @@ export class AuthService{
                 email: dtoEmail,
             }
         })
-        const {hash: userHash, id: userId, email: userEmail}=user
 
         if(!user){
             throw new ForbiddenException(
                 'Credentials incorrect',
             )   
         }
+
+        const {hash: userHash, id: userId, email: userEmail}=user
 
         const pwMatches = await argon.verify(
             userHash, dtoPassword,

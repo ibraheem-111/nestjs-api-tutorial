@@ -13,24 +13,19 @@ export class AuthController{
 
     @Post('signup')
     async signup(@Body() dto: AuthDto): Promise<User>{    
-        try{
-            const user : User= await this.authService.signup(dto);
-            return user
-        }catch{
-            throw new HttpException("Something went wrong",500);
-        }
+
+        const user : User= await this.authService.signup(dto);
+        return user
+
     }
 
     @HttpCode(HttpStatus.OK)
     @Post('signin')
     async signin(@Body() dto:AuthDto): Promise<UserAt>{
-        try{
-            const user : UserAt= await this.authService.signin(dto);
-            return user
-        }catch(error){
-            console.error(error);
-            throw new HttpException("Something went wrong",500);
-        }
+
+        const user : UserAt= await this.authService.signin(dto);
+        return user
+
     }
 
 }

@@ -34,7 +34,7 @@ export class BookmarkController {
             return bookmark;
         }
         catch(err){
-            throw err;
+            return err;
         }
     }
 
@@ -49,7 +49,7 @@ export class BookmarkController {
                 return bookmark;
             }
             catch(err){
-                throw err;
+                return err;
             }
         }
 
@@ -69,7 +69,7 @@ export class BookmarkController {
             return bookmarkOrError;
         }
         catch(err){
-            throw err
+            return err
         }
     }
 
@@ -84,7 +84,7 @@ export class BookmarkController {
             return bookmarkOrError;
         }
         catch(err){
-            throw err;
+            return err;
         }
     }
 }

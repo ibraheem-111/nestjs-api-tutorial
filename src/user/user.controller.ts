@@ -12,12 +12,12 @@ export class UserController {
     constructor(private userService: UserService){}
     
     @Get('me')
-    getMe(@GetUser() user: User){
+    getMe(@GetUser() user: User): User | Error{
         try{
             const returnedUser:User=user
             return returnedUser;  
         }catch(error){
-            throw   error
+            return   error
         }     
     };
 
@@ -28,7 +28,7 @@ export class UserController {
             return users;
 
         }catch(error){
-            throw error;
+            return error;
 
         }
     }
@@ -42,7 +42,7 @@ export class UserController {
             const editedUser: User = await this.userService.editUser(user, dto);
             return editedUser;
         }catch(error){
-            throw error
+            return error
         }
     }
 
@@ -52,7 +52,7 @@ export class UserController {
             const deletedUser: User | Error = await this.userService.deleteOwnUser(userId)
             return deletedUser
         }catch(error){
-            throw error
+            return error
         }
     }
     

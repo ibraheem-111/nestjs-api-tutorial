@@ -7,7 +7,25 @@ import { AuthDto } from "../src/auth/dto";
 import { CreateBookmarkDto, EditBookmarkDto } from "../src/bookmark/dto";
 import { EditUserDto } from "../src/user/dto";
 import {ConfigService} from "@nestjs/config";
-import { User } from "@prisma/client";
+import { PrismaClient, User } from "@prisma/client";
+import * as argon from "argon2";
+
+
+
+async function main () {
+  const prisma = new PrismaClient
+  const config = new ConfigService
+  const password:string = await config.get("ADMIN_PASSWORD");
+  const hash = await argon.hash(password);
+  const admin =await prisma.user.create({
+      data:{
+          email:"admin@admin.com",
+          firstName:"admin",
+          lastName:"admin",
+          hash: hash
+      }
+  })
+}
 
 describe ('App e2e', ()=>{
   let app: INestApplication;
@@ -32,7 +50,7 @@ describe ('App e2e', ()=>{
 
     prisma = app.get(PrismaService);
     await prisma.cleanDb();
-
+    await main();
     pactum.request.setBaseUrl(
       'http://localhost:3333')
   })
@@ -42,9 +60,13 @@ describe ('App e2e', ()=>{
   });
   
   describe('Auth',()=>{
+    const adminDto: AuthDto={
+      email:"admin@admin.com",
+      password:"even-more-secret"
+    }
     const dto: AuthDto = {
       email : 'test1@gmail.com',
-      password: 'testpassword',
+      password: 'test1password',
     };
     const dto2: AuthDto = {
       email : 'test2@gmail.com',
@@ -319,10 +341,10 @@ describe ('App e2e', ()=>{
 
   describe("Users_delete",()=>{
     describe("Should delete the signed in user",()=>{
-      it('should signin',()=>{
+      it('should signin as test1',()=>{
         const dto: AuthDto = {
           email : 'test1@gmail.com',
-          password: 'testpassword',
+          password: 'test1password',
         };
         return pactum
         .spec()
@@ -372,10 +394,10 @@ describe ('App e2e', ()=>{
         
       })
 
-      it("Should sign in as the remaining user : test 2",()=>{
+      it("Should sign in as the admin user",()=>{
         const dto: AuthDto = {
-          email : 'test2@gmail.com',
-          password: 'test2password',
+          email : 'admin@admin.com',
+          password: 'even-more-secret',
         };
         return pactum
         .spec()
@@ -417,75 +439,5 @@ describe ('App e2e', ()=>{
       
     })
 
-    describe("Should Delete all users", ()=>{
-      it("Should Signup new user", ()=>{
-
-        return pactum
-        .spec()
-        .post(
-          '/auth/signup',
-        ).withBody({email:"3rdtestuser@mail.com", password:"3rdtestuserpassword"})
-        .stores('userId2', 'id')
-        .expectStatus(201);
-      })
-
-      it("Should Signin new user", ()=>{
-
-        return pactum
-        .spec()
-        .post(
-          '/auth/signin',
-        ).withBody({email:"3rdtestuser@mail.com", password:"3rdtestuserpassword"})
-        .stores('userAt3', 'access_token')
-        .expectStatus(200);
-      })
-
-      it("should show three users including admin", ()=>{
-        
-        return pactum.spec()
-          .get('/users')
-          .expectStatus(200)
-          .withHeaders({
-            "Authorization":"Bearer $S{userAt3}"
-          })
-          .expectJsonLength(3)
-          .expectBodyContains("admin@admin.com") 
-      })
-      
-      it("should sign in the admin user", ()=>{
-        const dto = {email:"admin@admin.com", password: "even-more-secret"};
-        // const config = new ConfigService;
-        // const adminPassword: string = config.get("ADMIN_PASSWORD");
-        // console.log(adminPassword);
-        return pactum
-        .spec()
-        .post('/auth/signin')
-        .withBody(dto)
-        .stores("adminAt", "access_token")
-        .expectStatus(200)
-      })
-
-      it("should delete test user 3 while being signed in as the admin", ()=>{
-
-        return pactum.spec()
-        .delete("/users/admin/{id}")
-        .withPathParams('id','$S{userId2}')
-        .withHeaders({"Authorization":"Bearer $S{adminAt}"})
-        .expectStatus(200)
-      })
-
-      it('should show two users', ()=>{
-
-        return pactum
-          .spec()
-          .get('/users/')
-          .withHeaders({
-            'Authorization':'Bearer $S{adminAt}'
-          })
-          .expectStatus(200)
-          .expectJsonLength(2)
-          .expectBodyContains("admin@admin.com")
-      })
-    })
   })
 }) 
