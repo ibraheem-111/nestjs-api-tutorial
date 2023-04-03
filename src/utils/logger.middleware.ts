@@ -9,7 +9,6 @@ export class LoggerMiddleware implements NestMiddleware {
         const {method, originalUrl, body} = req;
 
         res.on('finish', ()=>{
-            const {statusCode}=res;
 
             this.logger.log("Request:");
             this.logger.log({
@@ -25,8 +24,8 @@ export class LoggerMiddleware implements NestMiddleware {
         if(next){next();}
     }
     getResponseLog = (res: Response) => {
-        const rawResponse = res.write;
-        const rawResponseEnd = res.end;
+        const {write:rawResponse, end:rawResponseEnd} = res;
+        
         const chunkBuffers = [];
         res.write = (...chunks) => {
           const resArgs = [];
@@ -55,7 +54,6 @@ export class LoggerMiddleware implements NestMiddleware {
           
            const responseLog = {
             response: {
-              statusCode: res.statusCode,
               body: JSON.parse(body) || body || {},
             },
           };

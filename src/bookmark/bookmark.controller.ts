@@ -1,5 +1,6 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, UseGuards } from '@nestjs/common';
 import { ForbiddenException } from '@nestjs/common/exceptions/forbidden.exception';
+import { ApiBearerAuth, ApiBody } from '@nestjs/swagger';
 import { Bookmark } from '@prisma/client';
 
 import { GetUser } from '../auth/decorator';
@@ -12,6 +13,7 @@ import { CreateBookmarkDto, EditBookmarkDto } from './dto';
 export class BookmarkController {
     constructor(private bookmarkService: BookmarkService){}
     @Get('/')
+    @ApiBearerAuth()
     async getBookmarks(@GetUser("id") userId:number): Promise<Bookmark[]>{
         try{
             const bookmarks :Bookmark[] =await this.bookmarkService.getBookmarks(userId);
@@ -22,6 +24,7 @@ export class BookmarkController {
     }
 
     @Get(':id')
+    @ApiBearerAuth()
     async getBookmarkById(
         @GetUser('id') userId: number,
         @Param('id', ParseIntPipe) bookmarkId: number,
@@ -39,6 +42,8 @@ export class BookmarkController {
     }
 
     @Post()
+    @ApiBearerAuth()
+    @ApiBody({type: CreateBookmarkDto})
     async createBookmark(
         @GetUser("id") userId:number, 
         @Body() dto:CreateBookmarkDto
@@ -54,6 +59,8 @@ export class BookmarkController {
         }
 
     @Patch(':id')
+    @ApiBearerAuth()
+    @ApiBody({type: EditBookmarkDto})
     async editBookmarkById(
         @GetUser('id') userId: number,
         @Param('id', ParseIntPipe) bookmarkId: number,
@@ -74,6 +81,7 @@ export class BookmarkController {
     }
 
     @Delete(':id')
+    @ApiBearerAuth()
     async deleteBookmarkById(
         @GetUser("id") userId:number,
         @Param('id', ParseIntPipe)    bookmarkId: number

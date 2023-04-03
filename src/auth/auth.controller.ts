@@ -1,5 +1,6 @@
 import { Body, Controller, HttpCode, HttpStatus, Post} from "@nestjs/common";
-import { HttpException } from "@nestjs/common/exceptions";
+import { UnauthorizedException } from "@nestjs/common/exceptions";
+import { ApiBody, ApiCreatedResponse, ApiOkResponse, ApiUnauthorizedResponse } from "@nestjs/swagger";
 import { User } from "@prisma/client";
 import { UserAt } from "./at";
 import { AuthService } from "./auth.service";
@@ -12,6 +13,8 @@ export class AuthController{
     }
 
     @Post('signup')
+    @ApiCreatedResponse({description: 'User signup'})
+    @ApiBody({type:AuthDto})
     async signup(@Body() dto: AuthDto): Promise<User>{    
 
         const user : User= await this.authService.signup(dto);
@@ -21,9 +24,14 @@ export class AuthController{
 
     @HttpCode(HttpStatus.OK)
     @Post('signin')
-    async signin(@Body() dto:AuthDto): Promise<UserAt>{
+    @ApiOkResponse({description: 'User signin'})
+    @ApiUnauthorizedResponse({description:"Incorrect Credentials"})
+    @ApiBody({type:AuthDto})
+    async signin(
+        @Body() dto:AuthDto
+        ): Promise<UserAt |UnauthorizedException>{
 
-        const user : UserAt= await this.authService.signin(dto);
+        const user : UserAt | UnauthorizedException= await this.authService.signin(dto);
         return user
 
     }

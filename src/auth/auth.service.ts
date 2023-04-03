@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable } from "@nestjs/common";
+import { ForbiddenException, Injectable, UnauthorizedException } from "@nestjs/common";
 import {User, Bookmark} from "@prisma/client";
 import { PrismaService } from "../prisma/prisma.service";
 import { AuthDto } from "./dto";
@@ -28,7 +28,7 @@ export class AuthService{
         })
 
         if(!user){
-            throw new ForbiddenException(
+            throw new UnauthorizedException(
                 'Credentials incorrect',
             )   
         }
@@ -40,7 +40,7 @@ export class AuthService{
         );
 
         if(!pwMatches){
-            throw new ForbiddenException("Credentials incorrect");
+            throw new UnauthorizedException("Password incorrect");
         };
 
         const userAccessToken : UserAt = await this.signToken(userId,userEmail);
