@@ -28,7 +28,7 @@ export class BookmarkController {
       const bookmarks: Bookmark[] = await this.bookmarkService.getBookmarks(
         userId,
       );
-      console.log("get bookmarks cotroller", bookmarks)
+      console.log('get bookmarks cotroller', bookmarks);
       return bookmarks;
     } catch (error) {
       throw error;
@@ -81,10 +81,10 @@ export class BookmarkController {
     try {
       const bookmarkOrError: Bookmark | ForbiddenException =
         await this.bookmarkService.editBookmarkById(userId, bookmarkId, dto);
-      console.log('bookmarkOrError',bookmarkOrError)
+      console.log('bookmarkOrError', bookmarkOrError);
       return bookmarkOrError;
     } catch (err) {
-      console.log(err)
+      console.log(err);
       return err;
     }
   }
@@ -95,11 +95,9 @@ export class BookmarkController {
     @GetUser('id') userId: number,
     @Param('id', ParseIntPipe) bookmarkId: number,
   ): Promise<Bookmark | ForbiddenException> {
-    
-      const bookmarkOrError: Bookmark | ForbiddenException =
-        await this.bookmarkService.deleteBookmarkById(userId, bookmarkId);
-      console.log(bookmarkOrError)
-      return bookmarkOrError;
-    
+    const bookmarkOrError: Bookmark | ForbiddenException =
+      await this.bookmarkService.deleteBookmarkById(userId, bookmarkId);
+    console.log(bookmarkOrError);
+    return bookmarkOrError;
   }
 }

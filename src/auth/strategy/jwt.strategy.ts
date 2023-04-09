@@ -9,8 +9,11 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
-  constructor(config: ConfigService, @InjectRepository(User)
-  private usersRepository: Repository<User>) {
+  constructor(
+    config: ConfigService,
+    @InjectRepository(User)
+    private usersRepository: Repository<User>,
+  ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,

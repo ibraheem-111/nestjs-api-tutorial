@@ -12,17 +12,17 @@ export class BookmarkService {
     @InjectRepository(Bookmark)
     private bookmarksRepository: Repository<Bookmark>,
     @InjectRepository(User)
-    private usersRepository: Repository<User>
+    private usersRepository: Repository<User>,
   ) {}
 
   async getBookmarks(userId: number): Promise<Bookmark[]> {
     const bookmarks: Bookmark[] = await this.bookmarksRepository.find({
       where: {
-        user : {id:userId},
+        user: { id: userId },
       },
     });
 
-    console.log("get bookmarks", bookmarks)
+    console.log('get bookmarks', bookmarks);
 
     return bookmarks;
   }
@@ -31,7 +31,7 @@ export class BookmarkService {
     const bookmarkFound = await this.bookmarksRepository.findOne({
       where: {
         id: bookmarkId,
-        user: {id:userId}
+        user: { id: userId },
       },
     });
 
@@ -43,12 +43,12 @@ export class BookmarkService {
     dto: CreateBookmarkDto,
   ): Promise<Bookmark> {
     const user = await this.usersRepository.findOne({
-      where:{
-        id:userId
-      }
-    })
+      where: {
+        id: userId,
+      },
+    });
     const bookmark = await this.bookmarksRepository.save({
-      user:user,
+      user: user,
       ...dto,
     });
 
@@ -63,7 +63,7 @@ export class BookmarkService {
     const bookmark = await this.bookmarksRepository.findOne({
       where: {
         id: bookmarkId,
-        user:{id:userId}
+        user: { id: userId },
       },
     });
 
@@ -71,13 +71,13 @@ export class BookmarkService {
       return new ForbiddenException('Access unauthorized');
     }
 
-    const updateResponse= await this.bookmarksRepository.update(
+    const updateResponse = await this.bookmarksRepository.update(
       bookmarkId,
-      
+
       {
-      title:dto.title,
-      description:dto.description
-      }
+        title: dto.title,
+        description: dto.description,
+      },
     );
 
     const editedBookmark = await this.bookmarksRepository.findOne({
@@ -93,7 +93,7 @@ export class BookmarkService {
     userId: number,
     bookmarkId: number,
   ): Promise<Bookmark | ForbiddenException> {
-    console.log(bookmarkId)
+    console.log(bookmarkId);
     const bookmark = await this.bookmarksRepository.findOne({
       where: {
         id: bookmarkId,
@@ -105,13 +105,10 @@ export class BookmarkService {
     }
 
     try {
-      await this.bookmarksRepository.delete(
-        bookmarkId
-      )
-    }catch(err){
-      
-      console.log(err)
-      throw err
+      await this.bookmarksRepository.delete(bookmarkId);
+    } catch (err) {
+      console.log(err);
+      throw err;
     }
 
     return bookmark;

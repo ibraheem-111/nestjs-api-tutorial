@@ -265,11 +265,8 @@ describe('App e2e', () => {
           .withHeaders({
             Authorization: 'Bearer $S{userAt}',
           })
-          .expectBodyContains(
-            'test bookmark')
-          .expectBodyContains(
-          'test link'
-          )
+          .expectBodyContains('test bookmark')
+          .expectBodyContains('test link')
           .expectStatus(200);
       });
     });

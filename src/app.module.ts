@@ -11,15 +11,15 @@ import { Bookmark } from './entity';
 import { DatabaseModule } from './db/database.module';
 import { ConfigService } from '@nestjs/config';
 
-const config = new ConfigService
-let port : number 
-let username : string
-let password  : string
-(async()=>{
+const config = new ConfigService();
+let port: number;
+let username: string;
+let password: string;
+(async () => {
   port = await config.get('DATABASE_PORT');
-  username= await  config.get('DATABASE_USERNAME');
-  password = await config.get("DATABASE_PASSWORD");
-})()
+  username = await config.get('DATABASE_USERNAME');
+  password = await config.get('DATABASE_PASSWORD');
+})();
 
 @Module({
   imports: [

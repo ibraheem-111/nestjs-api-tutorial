@@ -5,7 +5,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Bookmark, User } from '../entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Bookmark]),TypeOrmModule.forFeature([User])],
+  imports: [
+    TypeOrmModule.forFeature([Bookmark]),
+    TypeOrmModule.forFeature([User]),
+  ],
   controllers: [BookmarkController],
   providers: [BookmarkService],
 })

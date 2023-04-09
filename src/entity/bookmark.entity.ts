@@ -38,8 +38,8 @@ export class Bookmark {
 
   @ManyToOne((type) => User, (user) => user, {
     onDelete: 'CASCADE',
-    eager: true
+    eager: true,
   })
   @JoinTable()
-  user:User
+  user: User;
 }
