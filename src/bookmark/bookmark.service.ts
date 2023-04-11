@@ -1,10 +1,11 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 // import { Bookmark } from '@prisma/client';
 // import { PrismaService } from '../prisma/prisma.service';
-import { CreateBookmarkDto, EditBookmarkDto } from './dto';
+import { CreateBookmarkDto, EditBookmarkDto, SearchBookmarkDto } from './dto';
 import { Bookmark, User } from '../entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, Like } from 'typeorm';
+import { queries } from '../sql/index';
 
 @Injectable()
 export class BookmarkService {
@@ -16,13 +17,23 @@ export class BookmarkService {
   ) {}
 
   async getBookmarks(userId: number): Promise<Bookmark[]> {
-    const bookmarks: Bookmark[] = await this.bookmarksRepository.find({
-      where: {
-        user: { id: userId },
-      },
-    });
-
-    console.log('get bookmarks', bookmarks);
+    // const bookmarks: Bookmark[] = await this.bookmarksRepository.find({
+    //   where: {
+    //     user: { id: userId },
+    //     title: Raw("NULLIF(title,' ') ASC NULLS LAST")
+    //   },
+    //   order:{
+    //     title: 'ASC',
+    //   }
+    // });
+    //
+    const query: queries = new queries();
+    const { orderEmptyStringsLast } = query;
+    const bookmarks: Bookmark[] = await this.bookmarksRepository
+      .createQueryBuilder('bookmark')
+      .innerJoin('users', 'user', 'bookmark.user = user.id')
+      .orderBy(orderEmptyStringsLast, 'ASC', 'NULLS LAST')
+      .getMany();
 
     return bookmarks;
   }
@@ -112,5 +123,15 @@ export class BookmarkService {
     }
 
     return bookmark;
+  }
+
+  async searchBookmarkByTitle(userId: number, dto: SearchBookmarkDto) {
+    const { title } = dto;
+
+    const bookmarks: Bookmark[] = await this.bookmarksRepository.findBy({
+      title: Like(`${title}`),
+    });
+
+    return bookmarks;
   }
 }

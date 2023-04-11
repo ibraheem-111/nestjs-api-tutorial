@@ -15,7 +15,7 @@ import { Bookmark } from '../entity';
 import { GetUser } from '../auth/decorator';
 import { JwtGuard } from '../auth/guard';
 import { BookmarkService } from './bookmark.service';
-import { CreateBookmarkDto, EditBookmarkDto } from './dto';
+import { CreateBookmarkDto, EditBookmarkDto, SearchBookmarkDto } from './dto';
 
 @UseGuards(JwtGuard)
 @Controller('bookmarks')
@@ -68,6 +68,19 @@ export class BookmarkController {
     } catch (err) {
       return err;
     }
+  }
+
+  @Post('/search')
+  @ApiBearerAuth()
+  @ApiBody({ type: SearchBookmarkDto })
+  async searchBookmarkByTitle(
+    @GetUser('id') userId: number,
+    @Body() dto: EditBookmarkDto,
+  ): Promise<Bookmark[]> {
+    const bookmarks: Bookmark[] =
+      await this.bookmarkService.searchBookmarkByTitle(userId, dto);
+
+    return bookmarks;
   }
 
   @Patch(':id')
