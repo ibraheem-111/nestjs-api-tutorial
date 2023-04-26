@@ -5,6 +5,30 @@ version: 2.1
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/configuration-reference/#jobs
 jobs:
+  run tests:
+    docker:
+      image: circleci/node:18.14.0
+      image: postgres:latest
+    steps:
+      - checkout
+      - setup_remote_container
+      - run:
+          name: create docker container
+          command: |
+          docker compose up test-db -d
+      - run:
+          name: install npm dependencies
+          command: | 
+          npm install
+      - run: 
+          name: Run run_tests
+          command: |
+            npm run test:e2e
+      - run:
+          name:
+          command: |
+            npm run db:test:rm
+
   say-hello:
     # Specify the execution environment. You can specify an image from Docker Hub or use one of our convenience images from CircleCI's Developer Hub.
     # See: https://circleci.com/docs/configuration-reference/#executor-job
