@@ -7,8 +7,8 @@ version: 2.1
 jobs:
   run tests:
     docker:
-      image: circleci/node:18.14.0
-      image: postgres:latest
+      - image: circleci/node:18.14.0
+      - image: postgres:latest
     steps:
       - checkout
       - setup_remote_container
