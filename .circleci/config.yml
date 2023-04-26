@@ -15,7 +15,7 @@ jobs:
       - run:
           name: create docker container
           command: |
-            docker run --name postgres -p 5432:5432 -e POSTGRES_PASSWORD=ibraheem POSTGRES_DB=nest -d postgres:latest
+            docker run --name postgres -p 5435:5432 -e POSTGRES_PASSWORD=ibraheem POSTGRES_DB=nest -d postgres:latest
       - run:
           name: install npm dependencies
           command: | 
