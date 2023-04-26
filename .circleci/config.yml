@@ -7,7 +7,7 @@ version: 2.1
 jobs:
   run_tests:
     docker:
-      - image: circleci/node:18.14.0
+      - image: circleci/node:LTS
       - image: postgres:latest
     steps:
       - checkout
