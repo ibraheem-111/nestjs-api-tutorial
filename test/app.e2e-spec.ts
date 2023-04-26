@@ -6,25 +6,23 @@ import { AppModule } from '../src/app.module';
 import { AuthDto } from '../src/auth/dto';
 import { CreateBookmarkDto, EditBookmarkDto } from '../src/bookmark/dto';
 import { EditUserDto } from '../src/user/dto';
-import { ConfigService } from '@nestjs/config';
-import { PrismaClient, User } from '@prisma/client';
-import * as argon from 'argon2';
+
 import { DatabaseService } from '../src/db/database.service';
 
-async function main() {
-  const prisma = new PrismaClient();
-  const config = new ConfigService();
-  const password: string = await config.get('ADMIN_PASSWORD');
-  const hash = await argon.hash(password);
-  const admin = await prisma.user.create({
-    data: {
-      email: 'admin@admin.com',
-      firstName: 'admin',
-      lastName: 'admin',
-      hash: hash,
-    },
-  });
-}
+// async function main() {
+//   const prisma = new PrismaClient();
+//   const config = new ConfigService();
+//   const password: string = await config.get('ADMIN_PASSWORD');
+//   const hash = await argon.hash(password);
+//   const admin = await prisma.user.create({
+//     data: {
+//       email: 'admin@admin.com',
+//       firstName: 'admin',
+//       lastName: 'admin',
+//       hash: hash,
+//     },
+//   });
+// }
 
 // async function cleanDataBase () {
 
