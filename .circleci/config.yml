@@ -11,7 +11,7 @@ jobs:
       - image: postgres:latest
     steps:
       - checkout
-      - setup_remote_container
+      - setup_remote_docker
       - run:
           name: create docker container
           command: |
@@ -50,4 +50,4 @@ workflows:
       - say-hello
   run-tests:
     jobs:
-      -run_tests
+      - run_tests
