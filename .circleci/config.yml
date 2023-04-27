@@ -28,6 +28,8 @@ jobs:
           name: remove database
           command: |
             docker rm -f postgres
+      - store_test_results:
+          path: test-results
 
   say-hello:
     # Specify the execution environment. You can specify an image from Docker Hub or use one of our convenience images from CircleCI's Developer Hub.
