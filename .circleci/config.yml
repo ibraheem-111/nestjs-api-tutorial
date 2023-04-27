@@ -8,14 +8,14 @@ jobs:
   run_tests:
     docker:
       - image: circleci/node:14
-      - image: postgres:latest
+      - image: cimg/postgres:15.2.0
     steps:
       - checkout
       - setup_remote_docker
       - run:
           name: create docker container
           command: |
-            docker run -d --name postgres -p 5435:5432 -e POSTGRES_PASSWORD=ibraheem postgres:latest
+            docker run -d --name postgres -p 5435:5432 -e POSTGRES_PASSWORD=ibraheem cimg/postgres:15.2.0
       - run:
           name: install npm dependencies
           command: | 
