@@ -11,27 +11,23 @@ import { Bookmark } from './entity';
 import { DatabaseModule } from './db/database.module';
 import { ConfigService } from '@nestjs/config';
 
-const config = new ConfigService();
-let port: number;
-let username: string;
-let password: string;
-(async () => {
-  port = await config.get('DATABASE_PORT');
-  username = await config.get('DATABASE_USERNAME');
-  password = await config.get('DATABASE_PASSWORD');
-})();
-
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: 'ibraheem',
-      database: 'nest',
-      entities: [User, Bookmark],
-      synchronize: true,
+    TypeOrmModule.forRootAsync({
+      imports:[ConfigModule],
+      
+      useFactory: async (configService: ConfigService)=>({
+        type: 'postgres',
+        host: 'localhost',
+        port: configService.get('DATABASE_PORT'),
+        username: configService.get('DATABASE_USERNAME'),
+        password: configService.get('DATABASE_PASSWORD'),
+        database: 'nest',
+        entities: [User, Bookmark],
+        synchronize: true,
+      })
+
+      
     }),
     ConfigModule.forRoot({
       isGlobal: true,
