@@ -13,6 +13,7 @@ jobs:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: ibraheem
           POSTGRES_DB: nest
+          POSTGRES_PORT: 5435
     steps:
       - checkout
       - setup_remote_docker
