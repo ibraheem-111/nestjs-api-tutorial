@@ -9,13 +9,14 @@ jobs:
     docker:
       - image: cimg/node:18.12.0
       - image: circleci/postgres:13.2
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: ibraheem
+          POSTGRES_DB: nest
     steps:
       - checkout
       - setup_remote_docker
-      - run:
-          name: create docker container
-          command: |
-            docker run -d --name postgres -p 5435:5432 -e POSTGRES_PASSWORD=ibraheem -e POSTGRES_DB=nest circleci/postgres:13.2
+      
       - run:
           name: install npm dependencies
           command: | 
