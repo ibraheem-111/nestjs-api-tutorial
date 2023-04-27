@@ -10,6 +10,7 @@ import { User } from './entity/user.entity';
 import { Bookmark } from './entity';
 import { DatabaseModule } from './db/database.module';
 import { ConfigService } from '@nestjs/config';
+import { FirebaseModule } from './firebase/firebase.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { ConfigService } from '@nestjs/config';
     BookmarkModule,
     PrismaModule,
     DatabaseModule,
+    FirebaseModule,
   ],
 })
 export class AppModule implements NestModule {
