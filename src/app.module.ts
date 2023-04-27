@@ -15,7 +15,6 @@ import { ConfigService } from '@nestjs/config';
   imports: [
     TypeOrmModule.forRootAsync({
       imports:[ConfigModule],
-      
       useFactory: async (configService: ConfigService)=>({
         type: 'postgres',
         host: 'localhost',
@@ -25,8 +24,8 @@ import { ConfigService } from '@nestjs/config';
         database: 'nest',
         entities: [User, Bookmark],
         synchronize: true,
-      })
-
+      }),
+      inject: [ConfigService]
       
     }),
     ConfigModule.forRoot({
