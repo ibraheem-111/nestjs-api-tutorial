@@ -14,13 +14,14 @@ import { UserAt } from './at';
 import { User } from '../entity/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { FirebaseService } from 'src/firebase/firebase.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
-    // private prisma: PrismaService,
+    private readonly firebaseService: FirebaseService,
     private jwt: JwtService,
     private config: ConfigService,
   ) {}
@@ -90,5 +91,17 @@ export class AuthService {
     return {
       access_token: token,
     };
+  }
+
+  async fireBaseCreate(dto:AuthDto){
+    try{
+      const user = await this.firebaseService.createUser(dto)
+      
+      return user
+    }
+    catch(err){
+      console.error(err)
+      throw err
+    }
   }
 }

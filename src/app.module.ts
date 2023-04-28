@@ -11,6 +11,7 @@ import { Bookmark } from './entity';
 import { DatabaseModule } from './db/database.module';
 import { ConfigService } from '@nestjs/config';
 import { FirebaseModule } from './firebase/firebase.module';
+import { AuthMiddleware } from './utils/auth.middleware';
 
 @Module({
   imports: [
@@ -43,5 +44,7 @@ import { FirebaseModule } from './firebase/firebase.module';
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(LoggerMiddleware).forRoutes('*');
+    consumer.apply(AuthMiddleware)
+    .forRoutes('auth/signup','auth/signin')
   }
 }

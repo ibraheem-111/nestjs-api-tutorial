@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { AuthDto } from '../auth/dto';
 import { auth } from 'firebase-admin';
+import { User } from 'src/entity';
 
 @Injectable()
 export class FirebaseService {
@@ -8,9 +9,11 @@ export class FirebaseService {
 
     async createUser(data : AuthDto){
         try{
-            const user_id = await auth().createUser({
+            const user = await auth().createUser({
                 ...data
             })
+
+            return user
         }
         catch (err){
             throw err;
