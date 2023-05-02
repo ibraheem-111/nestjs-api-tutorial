@@ -29,9 +29,8 @@ export class AuthController {
   @ApiUnauthorizedResponse({ description: 'Incorrect Credentials' })
   @ApiBody({ type: AuthDto })
   async signin(@Body() dto: AuthDto): Promise<UserAt | UnauthorizedException> {
-    const userAccessToken: UserAt | UnauthorizedException = await this.authService.signin(
-      dto,
-    );
+    const userAccessToken: UserAt | UnauthorizedException =
+      await this.authService.signin(dto);
     return userAccessToken;
   }
 
@@ -39,14 +38,11 @@ export class AuthController {
   @ApiOkResponse({ description: 'User signin' })
   @ApiUnauthorizedResponse({ description: 'Incorrect Credentials' })
   @ApiBody({ type: AuthDto })
-  async fireBaseSignUp(@Body() dto:AuthDto){
-    try{
-      const user_created = this.authService.fireBaseCreate(dto)
+  async fireBaseSignUp(@Body() dto: AuthDto) {
+    try {
+      const user_created = this.authService.fireBaseCreate(dto);
 
       return user_created;
-    }
-    catch(err){
-
-    }
+    } catch (err) {}
   }
 }

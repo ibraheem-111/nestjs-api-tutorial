@@ -4,6 +4,6 @@ import { ConfigService } from '@nestjs/config';
 import { LoggerMiddleware } from '../utils/logger.middleware';
 
 @Module({
-  providers: [FirebaseService, ConfigService, LoggerMiddleware]
+  providers: [FirebaseService, ConfigService, LoggerMiddleware],
 })
 export class FirebaseModule {}

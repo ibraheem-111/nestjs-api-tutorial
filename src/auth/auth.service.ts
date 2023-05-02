@@ -1,5 +1,6 @@
 import {
   ForbiddenException,
+  HttpException,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -15,6 +16,7 @@ import { User } from '../entity/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { FirebaseService } from 'src/firebase/firebase.service';
+import { auth } from 'firebase-admin';
 
 @Injectable()
 export class AuthService {
@@ -58,13 +60,21 @@ export class AuthService {
     const hash = await argon.hash(dtoPassword);
 
     try {
-      const user = await this.usersRepository.save({
-        email: dtoEmail,
-        hash,
-      });
 
-      delete user.hash;
-      return user;
+      const userExists = await auth().getUserByEmail(dtoEmail)
+      
+      if(userExists){
+        const user = await this.usersRepository.save({
+          email: dtoEmail,
+          hash,
+        });
+
+        delete user.hash;
+        return user;
+      }else{
+        throw new UnauthorizedException("Doesn't exist on firebase")
+      }
+
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
         if (error.code === 'P2002') {
@@ -93,15 +103,14 @@ export class AuthService {
     };
   }
 
-  async fireBaseCreate(dto:AuthDto){
-    try{
-      const user = await this.firebaseService.createUser(dto)
-      
-      return user
-    }
-    catch(err){
-      console.error(err)
-      throw err
+  async fireBaseCreate(dto: AuthDto) {
+    try {
+      const user = await this.firebaseService.createUser(dto);
+
+      return user;
+    } catch (err) {
+      console.error(err);
+      throw err;
     }
   }
 }

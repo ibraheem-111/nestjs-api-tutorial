@@ -12,6 +12,22 @@ async function bootstrap() {
     }),
   );
 
+  // const config = new ConfigService();
+
+  // const privateKey = config.get('PRIVATE_KEY').replace(/\\n/g, '\n');
+  // const clientEmail = config.get('CLIENT_EMAIL');
+  // const projectId = config.get('PROJECT_ID');
+
+  // const appConfig: ServiceAccount = {
+  //   projectId,
+  //   privateKey,
+  //   clientEmail,
+  // };
+
+  // admin.initializeApp({
+  //   credential: admin.credential.cert(appConfig),
+  // });
+
   const options = new DocumentBuilder()
     .setTitle('CRUD REST API')
     .setDescription('REST CRUD API')
