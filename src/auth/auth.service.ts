@@ -15,7 +15,7 @@ import { UserAt } from './at';
 import { User } from '../entity/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { FirebaseService } from 'src/firebase/firebase.service';
+import { FirebaseService } from '../firebase/firebase.service';
 import { auth } from 'firebase-admin';
 
 @Injectable()

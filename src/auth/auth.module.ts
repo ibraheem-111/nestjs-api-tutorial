@@ -5,7 +5,7 @@ import { AuthService } from './auth.service';
 import { JwtStrategy } from './strategy';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '../entity/user.entity';
-import { FirebaseService } from 'src/firebase/firebase.service';
+import { FirebaseService } from '../firebase/firebase.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User]), JwtModule.register({})],
