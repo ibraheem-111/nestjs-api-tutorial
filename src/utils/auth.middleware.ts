@@ -19,10 +19,11 @@ export class AuthMiddleware implements NestMiddleware {
       const authToken = this.getToken(req);
       const { UNAUTHORIZED } = HttpStatus;
 
+      console.log("auth_middleware")
       next()
-      if (!authToken) {
-        throw new HttpException('Unauthorized', UNAUTHORIZED);
-      }
+      // if (!authToken) {
+      //   throw new HttpException('Unauthorized', UNAUTHORIZED);
+      // }
 
       // next()
     } catch (err) {
