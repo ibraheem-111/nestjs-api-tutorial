@@ -1,17 +1,19 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 // import { User } from '@prisma/client';
-import { PrismaService } from '../prisma/prisma.service';
 import { EditUserDto } from './dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../entity/user.entity';
 import { Repository } from 'typeorm';
+import { FirebaseService } from '../firebase/firebase.service';
+import { AuthDto } from '../auth/dto';
+
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
-    // private prisma : PrismaService,
+    private firebase: FirebaseService,
     private config: ConfigService,
   ) {}
 
@@ -47,7 +49,10 @@ export class UserService {
       return error;
     }
   }
-
+  
+  async deleteUserOnFireBase(dto:AuthDto){
+    this.firebase.removeUser
+  }
   async deleteManyUsers(
     userId: number,
     id: number,

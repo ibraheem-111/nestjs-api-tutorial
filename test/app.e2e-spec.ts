@@ -101,6 +101,15 @@ describe('App e2e', () => {
       it('should throw if no dto', async () => {
         return pactum.spec().post('/auth/signup').expectStatus(400);
       });
+
+      it('should delete from firebase', () => {
+        return pactum
+          .spec()
+          .post('/users/firebase')
+          .withBody(dto)
+          .expectStatus(201);
+      });
+
       it('should signup in firebase', () => {
         return pactum
           .spec()
@@ -116,6 +125,14 @@ describe('App e2e', () => {
           .post('/auth/signup')
           .withBody(dto)
           .stores('userId1', 'id')
+          .expectStatus(201);
+      });
+
+      it('should delete from firebase', () => {
+        return pactum
+          .spec()
+          .post('/users/firebase')
+          .withBody(dto2)
           .expectStatus(201);
       });
 

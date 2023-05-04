@@ -5,7 +5,7 @@ import {
   ParseIntPipe,
   UseGuards,
 } from '@nestjs/common';
-import { Body, Delete, Param, Patch } from '@nestjs/common/decorators';
+import { Body, Delete, Param, Patch, Post } from '@nestjs/common/decorators';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -19,13 +19,15 @@ import { JwtGuard } from '../auth/guard';
 import { EditUserDto } from './dto';
 import { UserService } from './user.service';
 import { User } from '../entity/user.entity';
+import { AuthDto } from 'src/auth/dto';
 
-@UseGuards(JwtGuard)
+
 @Controller('users')
 @ApiBearerAuth()
 export class UserController {
   constructor(private userService: UserService) {}
 
+  @UseGuards(JwtGuard)
   @Get('me')
   @ApiUnauthorizedResponse({ description: 'User not logged in' })
   @ApiOkResponse({ description: 'Show Signedin User' })
@@ -37,7 +39,7 @@ export class UserController {
       return error;
     }
   }
-
+  @UseGuards(JwtGuard)
   @Get()
   @ApiUnauthorizedResponse({ description: 'User Not Logged In' })
   @ApiOkResponse({ description: 'Show All Signedup Users' })
@@ -50,6 +52,7 @@ export class UserController {
     }
   }
 
+  @UseGuards(JwtGuard)
   @Patch()
   @ApiUnauthorizedResponse({ description: 'User Not Logged In' })
   @ApiOkResponse({ description: 'Edit Signed-in user' })
@@ -63,6 +66,7 @@ export class UserController {
     }
   }
 
+  @UseGuards(JwtGuard)
   @Delete()
   @ApiUnauthorizedResponse({ description: 'User is not signedin' })
   @ApiOkResponse({ description: 'Delete signed in user' })
@@ -77,6 +81,14 @@ export class UserController {
     }
   }
 
+  @Post('firebase')
+  @ApiForbiddenResponse({ description: 'Signed in user is not admin' })
+  @ApiOkResponse({ description: 'Delete any user' })
+  async deleteUserOnFireBase(@Body() dto:AuthDto){
+    return this.userService.deleteUserOnFireBase(dto)
+  }
+
+  @UseGuards(JwtGuard)
   @Delete('/admin/:id')
   @ApiForbiddenResponse({ description: 'Signed in user is not admin' })
   @ApiOkResponse({ description: 'Delete any user' })
@@ -89,3 +101,5 @@ export class UserController {
     return deletedUser;
   }
 }
+
+

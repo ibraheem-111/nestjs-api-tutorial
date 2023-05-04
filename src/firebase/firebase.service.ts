@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { AuthDto } from '../auth/dto';
 import { auth } from 'firebase-admin';
+import { UserRecord } from 'firebase-admin/lib/auth/user-record';
 
 @Injectable()
 export class FirebaseService {
@@ -21,14 +22,16 @@ export class FirebaseService {
     }
   }
 
-  async signIn(dto : AuthDto){
-    try{
-
-      
-
+  async removeUser(dto:AuthDto){
+    try {
+      const {email} = dto;
+      const findUser:UserRecord = await auth().getUserByEmail(email)
+      const {uid} = findUser;
+      const deleteUser = await auth().deleteUser(uid);
+      return deleteUser;
     }
-    catch{
-
+    catch(error){
+      throw error
     }
   }
 }
