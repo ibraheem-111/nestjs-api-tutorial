@@ -19,7 +19,7 @@ import { JwtGuard } from '../auth/guard';
 import { EditUserDto } from './dto';
 import { UserService } from './user.service';
 import { User } from '../entity/user.entity';
-import { AuthDto } from 'src/auth/dto';
+import { AuthDto } from '../auth/dto';
 
 
 @Controller('users')
