@@ -85,7 +85,8 @@ export class UserController {
   @ApiForbiddenResponse({ description: 'Signed in user is not admin' })
   @ApiOkResponse({ description: 'Delete any user' })
   async deleteUserOnFireBase(@Body() dto:AuthDto){
-    return this.userService.deleteUserOnFireBase(dto)
+    const deletedUser = await this.userService.deleteUserOnFireBase(dto)
+    return deletedUser
   }
 
   @UseGuards(JwtGuard)

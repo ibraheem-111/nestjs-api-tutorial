@@ -51,8 +51,10 @@ export class UserService {
   }
   
   async deleteUserOnFireBase(dto:AuthDto){
-    this.firebase.removeUser
+    const deletedUser = await this.firebase.removeUser(dto);
+    return deletedUser
   }
+
   async deleteManyUsers(
     userId: number,
     id: number,

@@ -28,7 +28,7 @@ export class FirebaseService {
       const findUser:UserRecord = await auth().getUserByEmail(email)
       const {uid} = findUser;
       const deleteUser = await auth().deleteUser(uid);
-      return deleteUser;
+      return findUser;
     }
     catch(error){
       throw error
