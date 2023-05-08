@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule, CacheModule, Inject } from '@nestjs/common';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { BookmarkModule } from './bookmark/bookmark.module';
@@ -14,20 +14,32 @@ import { FirebaseModule } from './firebase/firebase.module';
 import { AuthMiddleware } from './utils/auth.middleware';
 import { ServiceAccount } from 'firebase-admin';
 import { firebase } from './utils/firebase';
+import { redisStore } from 'cache-manager-redis-store';
 
 @Module({
   imports: [
+    CacheModule.register({
+      isGlobal:true,
+      // @ts-ignore
+      store: async () => await redisStore({
+        socket: {
+          host: 'localhost',
+          port: 6379,
+        }
+      }),
+      ttl:60*60*24,
+    }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
         type: 'postgres',
-        host: 'localhost',
+        host: '0.0.0.0',
         port: configService.get('DATABASE_PORT'),
         username: configService.get('DATABASE_USERNAME'),
         password: configService.get('DATABASE_PASSWORD'),
         database: 'nest',
         entities: [User, Bookmark],
-        synchronize: true,
+        synchronize: false,
       }),
       inject: [ConfigService],
     }),

@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Bookmark, User } from '../entity';
 import { Repository } from 'typeorm';
-import { error } from 'console';
 
 @Injectable()
 export class DatabaseService {

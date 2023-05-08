@@ -16,6 +16,7 @@ import { GetUser } from '../auth/decorator';
 import { JwtGuard } from '../auth/guard';
 import { BookmarkService } from './bookmark.service';
 import { CreateBookmarkDto, EditBookmarkDto, SearchBookmarkDto } from './dto';
+import Redis from 'ioredis';
 
 @UseGuards(JwtGuard)
 @Controller('bookmarks')
@@ -41,12 +42,14 @@ export class BookmarkController {
     @GetUser('id') userId: number,
     @Param('id', ParseIntPipe) bookmarkId: number,
   ): Promise<Bookmark> {
-    try {
+    try{
       const bookmark: Bookmark = await this.bookmarkService.getBookmarkById(
         userId,
         bookmarkId,
       );
+ 
       return bookmark;
+
     } catch (err) {
       return err;
     }
