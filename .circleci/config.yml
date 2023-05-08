@@ -8,17 +8,16 @@ jobs:
   run_tests:
     docker:
       - image: cimg/node:18.12.0
+      - image: circleci/redis:6.0
       - image: circleci/postgres:13.2
         environment:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: ibraheem
           POSTGRES_DB: nest
           POSTGRES_PORT: 5435
-      -image: circleci/redis:6.0
     steps:
       - checkout
       - setup_remote_docker
-      
       - run:
           name: install npm dependencies
           command: | 
