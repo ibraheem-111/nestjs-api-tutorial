@@ -39,7 +39,7 @@ import { redisStore } from 'cache-manager-redis-store';
         password: configService.get('DATABASE_PASSWORD'),
         database: 'nest',
         entities: [User, Bookmark],
-        synchronize: false,
+        synchronize: true,
       }),
       inject: [ConfigService],
     }),

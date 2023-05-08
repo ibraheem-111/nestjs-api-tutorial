@@ -6,7 +6,6 @@ import { Bookmark, User } from '../entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Like } from 'typeorm';
 import { queries } from '../sql/index';
-import {Redis} from 'ioredis';
 import {Cache} from 'cache-manager';
 
 @Injectable()
@@ -43,11 +42,11 @@ export class BookmarkService {
 
   async getBookmarkById(userId: number, bookmarkId: number): Promise<Bookmark> {
     try{
-      const cachedBookmark:string = await this.cacheManager.get(`bookmark${bookmarkId}`);
-
+      const cachedBookmark:Bookmark = await this.cacheManager.get(`bookmark${bookmarkId}`);
+      
       if(cachedBookmark){
-        const bookmark: Bookmark = JSON.parse(cachedBookmark)
-        return bookmark;
+        
+        return cachedBookmark;
       }
       else{
         const bookmark = await this.bookmarksRepository.findOne({
@@ -56,8 +55,8 @@ export class BookmarkService {
             user: { id: userId },
           },
         });
-        const stringifiedBookmark: string = JSON.stringify(bookmark)
-        const cacheBookmark = await this.cacheManager.set(`bookmark${bookmarkId}`, stringifiedBookmark)
+        
+        const cacheBookmark = await this.cacheManager.set(`bookmark${bookmarkId}`, bookmark)
 
         return bookmark;
 
