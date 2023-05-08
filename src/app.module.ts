@@ -33,7 +33,7 @@ import { redisStore } from 'cache-manager-redis-store';
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
         type: 'postgres',
-        host: '0.0.0.0',
+        host: 'localhost',
         port: configService.get('DATABASE_PORT'),
         username: configService.get('DATABASE_USERNAME'),
         password: configService.get('DATABASE_PASSWORD'),
